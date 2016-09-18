@@ -20,13 +20,29 @@ spec = do
       w `shouldBe` 2
       h `shouldBe` 1
       isEmpty board 1 0 `shouldBe` True
+      countCorrectCells board `shouldBe` 0
+      (w * h) `shouldBe` 2
+      getStatus board `shouldBe` Playing
 
       let board' = addMine board 1 0
       isEmpty board' 1 0 `shouldBe` False
+      cellAt board'  1 0 `shouldBe` Cell Mine False
 
       let board'2 = select board' 0 0
-      checkValue board'2 0 0 `shouldBe` Empty 1
+      cellAt board'2 0 0 `shouldBe` Cell (Empty 1) False
 
-      -- flag 0,1
-      let board'3 = flag board'2 0 1
-      isFlagged board'3 0 1 `shouldBe` True
+      isFlagged board'2 1 0 `shouldBe` False
+
+      let board'3 = toggleFlag board'2 1 0
+      isFlagged board'3 1 0 `shouldBe` True
+
+      let board'4 = toggleFlag board'3 1 0
+      isFlagged board'4 1 0 `shouldBe` False
+
+      cellAt board'4 1 0 `shouldBe` Cell Mine False
+
+      getStatus board'4 `shouldBe` Playing
+      let board'5 = toggleFlag board'4 1 0
+      getStatus board'5 `shouldBe` Victory
+
+      --TODO: Exploded status
